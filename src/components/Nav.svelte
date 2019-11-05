@@ -1,47 +1,60 @@
 <script>
+  import { crossfade } from 'svelte/transition'
+
   export let segment
+
+  const [send, receive] = crossfade({
+    duration: d => Math.sqrt(d * 300),
+    fallback(node, params) {
+      const style = getComputedStyle(node)
+      const transform = style.transform === 'none' ? '' : style.transform
+
+      return {
+        duration: 0,
+        css: t => `
+          transform: ${transform} scale(${t});
+          opacity: ${t}
+        `
+      }
+    }
+  })
 </script>
 
 <style>
   nav {
-    border-bottom: 1px solid rgba(255, 62, 0, 0.1);
+    z-index: 1000;
+    background: linear-gradient(#0b0e27, #1d2563);
     font-weight: 300;
     padding: 0 1em;
   }
 
   ul {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin: 0;
     padding: 0;
   }
 
-  /* clearfix */
-  ul::after {
-    content: '';
-    display: block;
-    clear: both;
-  }
-
   li {
-    display: block;
-    float: left;
-  }
-
-  .selected {
     position: relative;
-    display: inline-block;
+    list-style-type: none;
+    width: 100%;
+    max-width: 15rem;
   }
 
-  .selected::after {
+  .underline {
     position: absolute;
-    content: '';
-    width: calc(100% - 1em);
+    width: 100%;
+    left: 0;
+    bottom: 0;
     height: 2px;
-    background-color: rgb(255, 62, 0);
+    background-color: #abde34;
     display: block;
-    bottom: -1px;
   }
 
   a {
+    text-align: center;
     text-decoration: none;
     padding: 1em 0.5em;
     display: block;
@@ -51,20 +64,36 @@
 <nav>
   <ul>
     <li>
-      <a class={segment === undefined ? 'selected' : ''} href=".">home</a>
+      <a href=".">
+        Home
+        {#if segment === undefined}
+          <div
+            class="underline"
+            in:receive={{ key: 'underline' }}
+            out:send={{ key: 'underline' }} />
+        {/if}
+      </a>
     </li>
     <li>
-      <a class={segment === 'about' ? 'selected' : ''} href="about">about</a>
+      <a href="mapping">
+        Mapping
+        {#if segment === 'mapping'}
+          <div
+            class="underline"
+            in:receive={{ key: 'underline' }}
+            out:send={{ key: 'underline' }} />
+        {/if}
+      </a>
     </li>
-
-    <!-- for the blog link, we're using rel=prefetch so that Sapper prefetches
-		     the blog data when we hover over the link or tap it on a touchscreen -->
     <li>
-      <a
-        rel="prefetch"
-        class={segment === 'blog' ? 'selected' : ''}
-        href="blog">
-        blog
+      <a href="web">
+        Web
+        {#if segment === 'web'}
+          <div
+            class="underline"
+            in:receive={{ key: 'underline' }}
+            out:send={{ key: 'underline' }} />
+        {/if}
       </a>
     </li>
   </ul>

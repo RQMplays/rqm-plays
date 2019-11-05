@@ -1,52 +1,30 @@
+<script>
+  import { bounceOut } from 'svelte/easing'
+  import { send, receive } from 'crossfade'
+</script>
+
 <style>
-  h1,
-  figure,
-  p {
-    text-align: center;
-    margin: 0 auto;
-  }
-
-  h1 {
-    font-size: 2.8em;
-    text-transform: uppercase;
-    font-weight: 700;
-    margin: 0 0 0.5em 0;
-  }
-
-  figure {
-    margin: 0 0 1em 0;
-  }
-
   img {
-    width: 100%;
-    max-width: 400px;
-    margin: 0 0 1em 0;
-  }
-
-  p {
-    margin: 1em auto;
-  }
-
-  @media (min-width: 480px) {
-    h1 {
-      font-size: 4em;
-    }
+    border-radius: 1000px;
   }
 </style>
 
 <svelte:head>
-  <title>Sapper project template</title>
+  <title>RQM- Playground</title>
 </svelte:head>
 
-<h1>Great success!</h1>
+<main>
+  <h1 in:receive={{ key: 'title', in: true }} out:send={{ key: 'title' }}>
+    Welcome !
+  </h1>
 
-<figure>
-  <img alt="Borat" src="great-success.png" />
-  <figcaption>HIGH FIVE!</figcaption>
-</figure>
+  <img
+    in:receive={{ key: 'img', in: true }}
+    out:send={{ key: 'img' }}
+    src="avatarrqm.jpg"
+    alt="rqm" />
 
-<p>
-  <strong>
-    Try editing this file (src/routes/index.svelte) to test live reloading.
-  </strong>
-</p>
+  <p in:receive={{ key: 'text', in: true }} out:send={{ key: 'text' }}>
+    <strong>Let's play with some JavaScript ;)</strong>
+  </p>
+</main>
